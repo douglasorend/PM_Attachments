@@ -1,0 +1,5 @@
+v2.0 Beta 1 - February 12th, 2017
+o Moved PM Attachment functionality into [b]Subs-PMAttachments.php[/b].
+o Moved PM Attachment admin functions into [b]Subs-PMAttachmentsAdmin.php[/b].
+o Moved PM Attachment admin templates into [b]PMAttachments.template.php[/b].
+o Moved PM File Maintenance stuff to new [b]PM File Maintenance[/b] tab.

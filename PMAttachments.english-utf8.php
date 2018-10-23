@@ -1,19 +1,22 @@
-﻿<?xml version="1.0"?>
-<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
-<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-<id>sologhost:pmattachments</id>
-<version>1.6</version>
+﻿<?php
+/**********************************************************************************
+* PMAttachments.english-utf8.php - English language file
+***********************************************************************************
+* This mod is licensed under the 2-clause BSD License, which can be found here:
+*	http://opensource.org/licenses/BSD-2-Clause
+***********************************************************************************
+* This program is distributed in the hope that it is and will be useful, but      *
+* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
+* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
+**********************************************************************************/
+if (!defined('SMF')) 
+	die('Hacking attempt...');
 
-<file name="$languagedir/Modifications.english-utf8.php" error="skip">
-	<operation>
-		<search position="end" /><add><![CDATA[
+global $scripturl, $helptxt;
 
-//
-// PM Attachments MOD Begin
-//
+$txt['pm_report_desc'] = 'From this page you can report the personal message you received to the admin team of the forum. Please be sure to include a description of why you are reporting the message, as this will be sent along with the contents of the original message, including all attachments.';
 
-global $scripturl;
-
+// PM Attachment restrictions
 $txt['attach_restrict_attachmentNumPerPMLimit'] = '%1$d per pm';
 $txt['attach_restrict_attachmentPMLimit'] = 'maximum total size %1$dKB';
 $txt['attach_restrict_pmAttachmentSizeLimit'] = 'maximum individual size %1$dKB';
@@ -23,6 +26,7 @@ $txt['pmattachments_mail'] = 'The following are direct links to all of the attac
 
 // Settings Titles
 $txt['pmattachment_manager_settings'] = 'PM Attachment Settings';
+$txt['pmattachment_manager_maintenance'] = 'PM File Maintenance';
 
 // Maintenance Settings
 $txt['pmattachment_options'] = 'PM File Attachment Options';
@@ -109,23 +113,7 @@ $txt['permissionhelp_pm_view_attachments'] = 'PM Attachments are files that are 
 $txt['permissionname_pm_post_attachments'] = 'Upload PM attachments';
 $txt['permissionhelp_pm_post_attachments'] = 'PM Attachments are files that are attached to personal messages. One personal message can contain multiple attachments. Unchecking this completely disables these users from being able to upload attachments in personal messages.';
 
-
-//
-// PM Attachments MOD End
-//
-
-
-]]></add>
-	</operation>
-</file>
-<file name="$languagedir/Help.english-utf8.php" error="skip">
-	<operation>
-		<search position="end" /><add><![CDATA[
-
-//
-// PM ATTACHMENTS MOD BEGIN...
-//
-
+// PM Help text:
 $helptxt['pmattachment_manager_settings'] = 'PM Attachments are files that members can upload, and attach to a Personal Message they send to other members.<br /><br />
 		<strong>Check attachment\'s extension</strong>:<br /> Checks extensions of the files being uploaded before permitting this file.<br />
 		<strong>Allowed attachment extensions</strong>:<br /> Sets the allowed extensions of attached files.<br />
@@ -148,39 +136,20 @@ $helptxt['pmattachments_remove_by_members'] = 'Input any usernames separated by 
 
 $helptxt['pmattachments_remove_all'] = 'This will remove all PM Attachments from and sent to all members, including yourself.  Should be used as a last resort.<br /><br />Some scenario\'s that may warrant a need for you to do this, are as follows:<br />If you are about to uninstall PM Attachments and want your users to know that all PM Attachments have been removed by the Admin before you uninstall it.  If you just don\'t have the space on your server for these files anymore.  If you plan on starting fresh and/or want to reduce or increase the size for the PM Attachments Directory, or change the directory and you don\'t want any files in this directory before you make any changes.  If many users are abusing the use of PM Attachments on your server, and many other reasons for this as well.';
 
-//
-// PM ATTACHMENTS MOD END!!
-//
-
-
-]]></add>
-	</operation>
-</file>
-<file name="$languagedir/EmailTemplates.english-utf8.php" error="skip">
-	<operation>
-		<search position="after"><![CDATA[	'admin_attachments_full' =>]]></search>
-		<add><![CDATA[	'admin_pm_attachments_full' => array(
-		/*
-			@additional_params: admin_pm_attachments_full
-				REALNAME:
-			@description:
-		*/
-		'subject' => 'Urgent! PM Attachments folder almost full',
-		'body' => '{REALNAME},
+$txt['emails']['admin_pm_attachments_full'] = array(
+	/*
+		@additional_params: admin_pm_attachments_full
+			REALNAME:
+		@description:
+	*/
+	'subject' => 'Urgent! PM Attachments folder almost full',
+	'body' => '{REALNAME},
 
 The PM attachments folder at {FORUMNAME} is almost full. Please visit the forum to resolve this problem.
 
 Once the PM attachments folder reaches it\'s maximum permitted size users will not be able to continue to upload attachments via Personal Messages. (If enabled).
 
 {REGARDS}',
-	),
-]]></add>
-	</operation>
-</file>
-<file name="$languagedir/PersonalMessage.english-utf8.php" error="skip">
-	<operation>
-		<search position="before"><![CDATA[$txt['pm_report_desc'] = 'From this page you can report the personal message you received to the admin team of the forum. Please be sure to include a description of why you are reporting the message, as this will be sent along with the contents of the original message]]></search>
-		<add><![CDATA[, including all attachments]]></add>
-	</operation>
-</file>
-</modification>
+		);
+
+?>
