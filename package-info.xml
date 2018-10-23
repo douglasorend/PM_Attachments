@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+<id>sologhost:pmattachments</id>
+<name>PM Attachments</name>
+<type>modification</type>
+<version>1.6</version>
+
+	<!--// NEWEST SMF 2.0 RC4 Versions //-->
+	<install for="2.0 RC4">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachmentsRC.xml</modification>
+		<modification type="file">rc4.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstallRC2.php</code>
+	</install>
+	
+	<upgrade for="2.0 RC4" from="1.5">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pma_uprc4.xml</modification>
+	</upgrade>
+	
+	<uninstall for="2.0 RC4">
+		<readme type="file" parsebbc="true">remove.bbc</readme>
+		<modification type="file" reverse="true">pmattachmentsRC.xml</modification>
+		<modification type="file" reverse="true">rc4.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english-utf8.xml</modification>
+		<modification type="file" reverse="true">russian.xml</modification>
+		<modification type="file" reverse="true">russian-utf8.xml</modification>
+		<remove-dir name="$boarddir/pm_attachments" />
+		<code>pmAttachmentsUninstallRC2.php</code>
+	</uninstall>
+
+	<!--// SMF 2.0 RC3 Versions //-->
+	<install for="2.0 RC3">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachmentsRC.xml</modification>
+		<modification type="file">rc3.xml</modification>
+		<modification type="file">pma_notrc4.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstallRC2.php</code>
+	</install>
+	
+	<upgrade for="2.0 RC3">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachmentsRC.xml</modification>
+		<modification type="file">rc3.xml</modification>
+		<modification type="file">pma_notrc4.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstallRC2.php</code>
+	</upgrade>
+	
+	<uninstall for="2.0 RC3">
+		<readme type="file" parsebbc="true">remove.bbc</readme>
+		<modification type="file" reverse="true">pmattachmentsRC.xml</modification>
+		<modification type="file" reverse="true">rc3.xml</modification>
+		<modification type="file" reverse="true">pma_notrc4.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english-utf8.xml</modification>
+		<modification type="file" reverse="true">russian.xml</modification>
+		<modification type="file" reverse="true">russian-utf8.xml</modification>
+		<remove-dir name="$boarddir/pm_attachments" />
+		<code>pmAttachmentsUninstallRC2.php</code>
+	</uninstall>
+
+
+	<!--// SMF 2.0 RC2 Versions //-->
+	<install for="2.0 RC2">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachmentsRC.xml</modification>
+		<modification type="file">rc2.xml</modification>
+		<modification type="file">pma_notrc4.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstallRC2.php</code>
+	</install>
+	
+	<uninstall for="2.0 RC2">
+		<readme type="file" parsebbc="true">remove.bbc</readme>
+		<modification type="file" reverse="true">pmattachmentsRC.xml</modification>
+		<modification type="file" reverse="true">rc2.xml</modification>
+		<modification type="file" reverse="true">pma_notrc4.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english-utf8.xml</modification>
+		<modification type="file" reverse="true">russian.xml</modification>
+		<modification type="file" reverse="true">russian-utf8.xml</modification>
+		<remove-dir name="$boarddir/pm_attachments" />
+		<code>pmAttachmentsUninstallRC2.php</code>
+	</uninstall>
+
+	<!--// Regular SMF 2.0 RC1-1 and RC1.2 Versions //-->
+	<install for="2.0 - 2.0.3">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachments.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstall.php</code>
+	</install>
+	
+	<upgrade for="2.0 - 2.0.3" from="1.0 - 1.3">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<modification type="file">pmattachments.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<code>pmAttachmentsInstall.php</code>
+	</upgrade>
+	
+	<uninstall for="2.0 - 2.0.3">
+		<readme type="file" parsebbc="true">remove.bbc</readme>
+		<modification type="file" reverse="true">pmattachments.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english-utf8.xml</modification>
+		<modification type="file" reverse="true">russian.xml</modification>
+		<modification type="file" reverse="true">russian-utf8.xml</modification>
+		<remove-dir name="$boarddir/pm_attachments" />
+		<code>pmAttachmentsUninstall.php</code>
+	</uninstall>
+
+		<!--// SMF 2.0.4 and later //-->
+		<!--// Use 'database' directive in place of 'code' directive so that database data can be retained when the package is uninstalled //-->
+	<install for="2.0.4 - 2.0.99">
+		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
+		<readme type="file" parsebbc="true">readme.bbc</readme>
+		<database>pmAttachmentsInstall-204.php</database>
+		<modification type="file">pmattachments-204.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english-utf8.xml</modification>
+		<modification type="file">russian.xml</modification>
+		<modification type="file">russian-utf8.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+	</install>
+	
+		<!--// Keep pm_attachments directory when uninstalling - previous versions delete it //-->
+	<uninstall for="2.0.4 - 2.0.99">
+		<readme type="file" parsebbc="true">remove-204.bbc</readme>
+        <code>pmAttachmentsUninstall-204.php</code>
+		<modification type="file" reverse="true">pmattachments-204.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english-utf8.xml</modification>
+		<modification type="file" reverse="true">russian.xml</modification>
+		<modification type="file" reverse="true">russian-utf8.xml</modification>
+	</uninstall>
+</package-info>
