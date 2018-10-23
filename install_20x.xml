@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.0 Beta 2</version>
+<version>2.0 Beta 3</version>
 
 <file name="$boarddir/index.php">
 	<operation>
@@ -98,19 +98,15 @@
 </file>
 <file name="$sourcedir/PersonalMessage.php">
 	<operation>
-		<search position="before"><![CDATA[// A folder, ie. inbox/sent etc.
-function MessageFolder()
-{
-	global $txt, $scripturl, $modSettings, $context, $subjects_request;
-	global $messages_request, $user_info, $recipients, $options, $smcFunc, $memberContext, $user_settings;]]></search>
-		<add><![CDATA[
-	//
+		<search position="after"><![CDATA[global $txt, $scripturl, $modSettings, $context, $subjects_request]]></search>
+		<add><![CDATA[//
 	// PM ATTACHMENTS MOD MessageFolder global...
 	//
 	global $attachments;
 	//
 	// PM ATTACHMENTS MOD END!!
-	//]]></add>
+	//
+	]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[require_once($sourcedir . '/Subs-Post.php');]]></search>
@@ -124,59 +120,59 @@ function MessageFolder()
 		$all_pms = array_unique($all_pms);]]></search>
 		<add><![CDATA[
 
-	//
-	// PM ATTACHMENTS BEGIN...
-	//
+		//
+		// PM ATTACHMENTS BEGIN...
+		//
 
-	$attachments = array();
+		$attachments = array();
 
-	if (!empty($all_pms))
-	{
-		// Fetch attachments.
-		if (!empty($modSettings['pmAttachmentEnable']) && allowedTo('pm_view_attachments'))
+		if (!empty($all_pms))
 		{
-			$request = $smcFunc['db_query']('', '
-				SELECT
-					pa.id_attach, pa.id_folder, pa.id_pm, pa.pm_report, pa.filename, pa.file_hash, IFNULL(pa.size, 0) AS filesize, pa.downloads,
-					pa.width, pa.height' . (empty($modSettings['pmAttachmentShowImages']) || empty($modSettings['pmAttachmentThumbnails']) ? '' : ',
-					IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
-				FROM {db_prefix}pm_attachments AS pa' . (empty($modSettings['pmAttachmentShowImages']) || empty($modSettings['pmAttachmentThumbnails']) ? '' : '
-					LEFT JOIN {db_prefix}pm_attachments AS thumb ON (thumb.id_attach = pa.id_thumb)') . '
-				WHERE pa.attachment_type = {int:attachment_type} AND (pa.id_pm IN ({array_int:pm_list}) OR pa.pm_report IN ({array_int:pm_list}))',
-				array(
-					'pm_list' => $all_pms,
-					'attachment_type' => 0,
-				)
-			);
-			$temp = array();
-			while ($row = $smcFunc['db_fetch_assoc']($request))
+			// Fetch attachments.
+			if (!empty($modSettings['pmAttachmentEnable']) && allowedTo('pm_view_attachments'))
 			{
-				$temp[$row['id_attach']] = $row;
-				
-				if (!empty($row['pm_report']))
-					if (!isset($attachments[$row['pm_report']]))
-						$attachments[$row['pm_report']] = array();
+				$request = $smcFunc['db_query']('', '
+					SELECT
+						pa.id_attach, pa.id_folder, pa.id_pm, pa.pm_report, pa.filename, pa.file_hash, IFNULL(pa.size, 0) AS filesize, pa.downloads,
+						pa.width, pa.height' . (empty($modSettings['pmAttachmentShowImages']) || empty($modSettings['pmAttachmentThumbnails']) ? '' : ',
+						IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height') . '
+					FROM {db_prefix}pm_attachments AS pa' . (empty($modSettings['pmAttachmentShowImages']) || empty($modSettings['pmAttachmentThumbnails']) ? '' : '
+						LEFT JOIN {db_prefix}pm_attachments AS thumb ON (thumb.id_attach = pa.id_thumb)') . '
+					WHERE pa.attachment_type = {int:attachment_type} AND (pa.id_pm IN ({array_int:pm_list}) OR pa.pm_report IN ({array_int:pm_list}))',
+					array(
+						'pm_list' => $all_pms,
+						'attachment_type' => 0,
+					)
+				);
+				$temp = array();
+				while ($row = $smcFunc['db_fetch_assoc']($request))
+				{
+					$temp[$row['id_attach']] = $row;
+					
+					if (!empty($row['pm_report']))
+						if (!isset($attachments[$row['pm_report']]))
+							$attachments[$row['pm_report']] = array();
 
-				if (!isset($attachments[$row['id_pm']]))
-					$attachments[$row['id_pm']] = array();
+					if (!isset($attachments[$row['id_pm']]))
+						$attachments[$row['id_pm']] = array();
+				}
+				$smcFunc['db_free_result']($request);
+
+				// This is better than sorting it with the query...
+				ksort($temp);
+
+				foreach ($temp as $row) {
+					if (!empty($row['pm_report']))
+						$attachments[$row['pm_report']][] = $row;
+					
+					$attachments[$row['id_pm']][] = $row;
+				}
 			}
-			$smcFunc['db_free_result']($request);
 
-			// This is better than sorting it with the query...
-			ksort($temp);
-
-			foreach ($temp as $row) {
-				if (!empty($row['pm_report']))
-					$attachments[$row['pm_report']][] = $row;
-				
-				$attachments[$row['id_pm']][] = $row;
-			}
 		}
-
-	}
-	//
-	// PM ATTACHMENTS END!!
-	//]]></add>
+		//
+		// PM ATTACHMENTS END!!
+		//]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[// Get a personal message for the theme.  (used to save memory.)
@@ -323,13 +319,16 @@ function prepareMessageContext($type = 'subject', $reset = false)
 			foreach ($_POST['attach_del'] as $i => $dummy)
 				$del_temp[$i] = (int) $dummy;
 
-			foreach ($context['current_attachments'] as $k => $dummy)
-				if (!in_array($dummy['id'], $del_temp))
-				{
-					$context['current_attachments'][$k]['unchecked'] = true;
-					$deleted_attachments = !isset($deleted_attachments) || is_bool($deleted_attachments) ? 1 : $deleted_attachments + 1;
-					$quantity--;
-				}
+			if (!empty($context['current_attachments']))
+			{
+				foreach ($context['current_attachments'] as $k => $dummy)
+					if (!in_array($dummy['id'], $del_temp))
+					{
+						$context['current_attachments'][$k]['unchecked'] = true;
+						$deleted_attachments = !isset($deleted_attachments) || is_bool($deleted_attachments) ? 1 : $deleted_attachments + 1;
+						$quantity--;
+					}
+			}
 		}
 
 		if (!empty($_FILES['attachment']))
@@ -406,14 +405,10 @@ function prepareMessageContext($type = 'subject', $reset = false)
 ]]></add>
 	</operation>
 	<operation>
-		<search position="after"><![CDATA[	$context['copy_to_outbox'] = !empty($_REQUEST['outbox']);
-	$context['reply'] = !empty($_REQUEST['replied_to']);]]></search>
-		<add><![CDATA[		
-	$context['num_allowed_attachments'] = empty($modSettings['attachmentNumPerPMLimit']) ? 50 : min($modSettings['attachmentNumPerPMLimit'] - count($context['current_attachments']) + (isset($deleted_attachments) ? $deleted_attachments : 0), $modSettings['attachmentNumPerPMLimit']);		
-
-	$context['can_post_attachment'] = !empty($modSettings['pmAttachmentEnable']) && $modSettings['pmAttachmentEnable'] == 1 && allowedTo('pm_post_attachments') && $context['num_allowed_attachments'] > 0 ? 1 : 0;	
-	
-]]></add>
+		<search position="before"><![CDATA[$context['reply'] = !empty($_REQUEST['replied_to']);]]></search>
+		<add><![CDATA[
+	$context['num_allowed_attachments'] = empty($modSettings['attachmentNumPerPMLimit']) ? 50 : min($modSettings['attachmentNumPerPMLimit'] - count($context['current_attachments']) + (isset($deleted_attachments) ? $deleted_attachments : 0), $modSettings['attachmentNumPerPMLimit']);
+	$context['can_post_attachment'] = !empty($modSettings['pmAttachmentEnable']) && $modSettings['pmAttachmentEnable'] == 1 && allowedTo('pm_post_attachments') && $context['num_allowed_attachments'] > 0 ? 1 : 0;	]]></add>
 	</operation>
 	<operation>
 		<search position="after"><![CDATA[	// Check whether we need to show the code again.]]></search>
@@ -432,10 +427,9 @@ function prepareMessageContext($type = 'subject', $reset = false)
 ]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[	// Do the actual sending of the PM.
-	if (!empty($recipientList['to']) || !empty($recipientList['bcc']))
-		$context['send_log'] = sendpm($recipientList, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0);]]></search>
-		<add><![CDATA[	if (isset($_FILES['attachment']['name']) || !empty($_SESSION['temp_pm_attachments']))
+		<search position="after"><![CDATA[// Do the actual sending of the PM.]]></search>
+		<add><![CDATA[// Check if they are trying to attach a new file...
+	if (isset($_FILES['attachment']['name']) || !empty($_SESSION['temp_pm_attachments']))
 	{	
 		// Verify they can post them (double checking for guests).
 		if (!allowedTo('pm_post_attachments') || $context['user']['is_guest'])
@@ -457,27 +451,29 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		$quantity = 0;
 		$total_size = 0;
 
-	if (!empty($_SESSION['temp_pm_attachments']))
-		foreach ($_SESSION['temp_pm_attachments'] as $attachID => $name)
+		if (!empty($_SESSION['temp_pm_attachments']))
+		{
+			foreach ($_SESSION['temp_pm_attachments'] as $attachID => $name)
+			{
+				if (preg_match('~^post_tmp_' . $user_info['id'] . '_\d+$~', $attachID) == 0)
+					continue;
+
+				if (!empty($_POST['attach_del']) && !in_array($attachID, $_POST['attach_del']))
 				{
-					if (preg_match('~^post_tmp_' . $user_info['id'] . '_\d+$~', $attachID) == 0)
-						continue;
-	
-					if (!empty($_POST['attach_del']) && !in_array($attachID, $_POST['attach_del']))
-					{
-						unset($_SESSION['temp_pm_attachments'][$attachID]);
-						@unlink($current_attach_dir . '/' . $attachID);
-						continue;
-					}
-	
-					$_FILES['attachment']['tmp_name'][] = $attachID;
-					$_FILES['attachment']['name'][] = $name;
-					$_FILES['attachment']['size'][] = filesize($current_attach_dir . '/' . $attachID);
-					list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($current_attach_dir . '/' . $attachID);
-	
 					unset($_SESSION['temp_pm_attachments'][$attachID]);
+					@unlink($current_attach_dir . '/' . $attachID);
+					continue;
 				}
-		
+
+				$_FILES['attachment']['tmp_name'][] = $attachID;
+				$_FILES['attachment']['name'][] = $name;
+				$_FILES['attachment']['size'][] = filesize($current_attach_dir . '/' . $attachID);
+				list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($current_attach_dir . '/' . $attachID);
+
+				unset($_SESSION['temp_pm_attachments'][$attachID]);
+			}
+		}
+
 		if (!isset($_FILES['attachment']['name']))
 			$_FILES['attachment']['tmp_name'] = array();
 
@@ -529,9 +525,11 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		}
 	}
 
-	// Do the actual sending of the PM.
-	if (!empty($recipientList['to']) || !empty($recipientList['bcc']))	
-		$context['send_log'] = sendpm($recipientList, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0, empty($attachIDs) ? array() : $attachIDs);]]></add>
+	]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[!empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0]]></search>
+		<add><![CDATA[, empty($attachIDs) ? array() : $attachIDs]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[// Delete the specified personal messages.
