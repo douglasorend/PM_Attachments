@@ -1,3 +1,6 @@
+v2.1 - March 7th, 2017
+o Replaced code that used [b]preg_match[/b] with [b]preg_match_callback[/b].  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=112942]GL700Wing[/url]!
+
 v2.0 Beta 3 - February 21st, 2017
 o Fixed undefined element error that could happen, was reported but never fixed.
 o Fixed some indentation issues within the mod.
