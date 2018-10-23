@@ -1,3 +1,7 @@
+v2.0 Beta 2 - February 17th, 2017
+o Moved function [b]removePMAttachments[/b] to [b]Subs-PMAttachments.php[/b].
+o Moved load language statement to earlier in [b]PersonalMessage.php[/b].
+
 v2.0 Beta 1 - February 12th, 2017
 o Moved PM Attachment functionality into [b]Subs-PMAttachments.php[/b].
 o Moved PM Attachment admin functions into [b]Subs-PMAttachmentsAdmin.php[/b].

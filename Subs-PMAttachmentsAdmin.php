@@ -14,9 +14,10 @@ if (!defined('SMF'))
 
 function MaintainPMFiles()
 {
-	global $context, $modSettings, $txt, $smcFunc;
+	global $context, $modSettings, $txt, $smcFunc, $sourcedir;
 
 	loadTemplate('PMAttachmentsAdmin');
+	require_once($sourcedir . '/Subs-PMAttachments.php');
 	$context['sub_template'] = 'pm_maintenance';
 
 	if (!empty($modSettings['pmCurrentAttachmentUploadDir']))
@@ -360,154 +361,6 @@ function ManagePMAttachmentPaths()
 	$context[$context['admin_menu_name']]['current_subsection'] = 'pmattachments';
 	$context['page_title'] = $txt['pmattach_path_manage'];
 	$context['sub_template'] = 'pmattachment_paths';
-}
-
-// Removes pm attachments - allowed query_types: '', 'personalmessages'
-function removePMAttachments($condition, $query_type = '', $return_affected_pms = false, $autoThumbRemoval = true, $is_update = true)
-{
-	global $modSettings, $smcFunc;
-
-	//!!! This might need more work!
-	$new_condition = array();
-	$query_parameter = array(
-		'thumb_attachment_type' => 3,
-	);
-
-	if (is_array($condition))
-	{
-		foreach ($condition as $real_type => $restriction)
-		{
-			// Doing a NOT?
-			$is_not = substr($real_type, 0, 4) == 'not_';
-			$type = $is_not ? substr($real_type, 4) : $real_type;
-
-			if (in_array($type, array('id_attach', 'id_pm')))
-				$new_condition[] = 'pa.' . $type . ($is_not ? ' NOT' : '') . ' IN (' . (is_array($restriction) ? '{array_int:' . $real_type . '}' : '{int:' . $real_type . '}') . ')';
-			elseif ($type == 'attachment_type')
-				$new_condition[] = 'pa.attachment_type = {int:' . $real_type . '}';
-			elseif ($type == 'msgtime')
-				$new_condition[] = 'pm.msgtime < {int:' . $real_type . '}';
-			elseif ($type == 'pm_report')
-				$new_condition[] = 'pa.pm_report > {int:' . $real_type . '}';
-			elseif ($type == 'size')
-				$new_condition[] = 'pa.size > {int:' . $real_type . '}';
-
-			// Add the parameter!
-			$query_parameter[$real_type] = $restriction;
-		}
-		$condition = implode(' AND ', $new_condition);
-	}
-
-	// Delete it only if it exists...
-	$pms = array();
-	$attach = array();
-	$parents = array();
-
-	// Get all the attachment names and id_pm's.
-	$request = $smcFunc['db_query']('', '
-		SELECT
-			pa.id_pm, pa.id_folder, pa.downloads, pa.filename, pa.file_hash, pa.attachment_type, pa.id_attach' . ($query_type == 'personalmessages' ? ', pm.id_pm' : '') . ',
-			thumb.id_folder AS thumb_folder, IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb.file_hash as thumb_file_hash, thumb_parent.id_attach AS id_parent
-		FROM {db_prefix}pm_attachments AS pa' .($query_type == 'personalmessages' ? '
-			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pa.id_pm)' : '') . '
-			LEFT JOIN {db_prefix}pm_attachments AS thumb ON (thumb.id_attach = pa.id_thumb)
-			LEFT JOIN {db_prefix}pm_attachments AS thumb_parent ON (thumb.attachment_type = {int:thumb_attachment_type} AND thumb_parent.id_thumb = pa.id_attach)
-		WHERE ' . $condition,
-		$query_parameter
-	);
-
-	while ($row = $smcFunc['db_fetch_assoc']($request))
-	{
-		// Figure out the "encrypted" filename and delete it ;).
-			$filename = getPMAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder'], false, $row['file_hash']);
-			@unlink($filename);
-
-			// If this was a thumb, the parent attachment should know about it.
-			if (!empty($row['id_parent']))
-				$parents[] = $row['id_parent'];
-
-			// If this attachments has a thumb, remove it as well.
-			if (!empty($row['id_thumb']) && $autoThumbRemoval)
-			{
-				$thumb_filename = getPMAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder'], false, $row['thumb_file_hash']);
-				@unlink($thumb_filename);
-				$attach[] = $row['id_thumb'];
-			}
-
-		// Make a list.
-		if ($return_affected_pms && empty($row['attachment_type']))
-			$pms[] = $row['id_pm'];
-
-		$attach[] = $row['id_attach'];
-	}
-	$smcFunc['db_free_result']($request);
-
-	// Removed attachments don't have to be updated anymore.
-	$parents = array_diff($parents, $attach);
-	if (!empty($parents))
-
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}pm_attachments
-			SET id_thumb = {int:no_thumb}
-			WHERE id_attach IN ({array_int:parent_attachments})',
-			array(
-				'parent_attachments' => $parents,
-				'no_thumb' => 0,
-			)
-		);
-
-	if (!empty($attach)) {
-
-		// Remove the attachment from pm_attachments...
-		$smcFunc['db_query']('', '
-			DELETE FROM {db_prefix}pm_attachments
-			WHERE id_attach IN ({array_int:attachment_list})',
-			array(
-				'attachment_list' => $attach,
-			)
-		);
-
-	if ($is_update) {
-			$request = $smcFunc['db_query']('', '
-				SELECT
-				downloads, attachments, id_pm, id_member
-				FROM {db_prefix}pm_recipients',
-				array(
-				)
-			);
-
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-			{
-				if (strlen($row['attachments']) >= 1 && strlen($row['downloads']) >= 1 && in_array($row['id_pm'], array_unique($pms)))
-				{
-					$pmr_attach = explode(',', $row['attachments']);
-					$pmr_downs = explode(',', $row['downloads']);
-
-					// get outta here...
-					$pmr_attach = array_diff($pmr_attach, $attach);
-					$pmr_downs = array_intersect_key($pmr_downs, $pmr_attach);
-
-					$smcFunc['db_query']('', '
-						UPDATE {db_prefix}pm_recipients
-						SET attachments = {string:new_attach},
-							downloads = {string:new_downs}
-							WHERE id_pm = {int:id_pm} AND
-							id_member = {int:id_member}',
-						array(
-							'new_downs' => implode(',', $pmr_downs),
-							'new_attach' =>  implode(',', array_unique($pmr_attach)),
-							'id_pm' => $row['id_pm'],
-							'id_member' => $row['id_member'],
-						)
-					);
-				}
-			}
-			$smcFunc['db_free_result']($request);
-		}
-	}
-
-	if ($return_affected_pms)
-		return array_unique($pms);
 }
 
 function RemovePMAttachByDownloads()

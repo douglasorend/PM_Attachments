@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]PM ATTACHMENTS V2.0 BETA 1[/b][/size][/color]
+[center][color=red][size=16pt][b]PM ATTACHMENTS V2.0 BETA 2[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=198712][b]Originally By SoLoGHost[/b][/url] -> [url=http://custom.simplemachines.org/mods/index.php?mod=1974]Link to Mod[/url]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]Taken Over By Dougiefresh[/b][/url]
 [/center]
@@ -8,14 +8,23 @@
 [color=blue][b][size=12pt][u]Introduction[/u][/size][/b][/color]
 Gives your users the ability to attach files and send them to other members via Personal Messages.  Based from the same code used to display attachments via posts.  [b]Completely secure[/b]!  Only users who have sent or received these files are able to view and/or download them based on their View Attachments Permission for the usergroup they belong to.  Administrators don't even have access to these attachments, unless you report the PM to them via "Report to Admin" link if enabled in Admin Settings.
 
-[color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
-> [url=http://www.simplemachines.org/community/index.php?action=profile;u=198712]SoLoGHoST[/url] - English translation
-> [url=http://www.simplemachines.org/community/index.php?action=profile;u=229017]Bugo[/url] - Russian translation
+[u][b]Important Note:[/b][/u]  To ensure PM Attachment Settings are correctly placed and loaded, you will be redirected so that your File Cache will be cleared, directly after installing PM Attachments.  After which, go to: [p]Admin[/b] => [b]Forum[/b] => [b]Attachments and Avatars[/b] => [b]PM Attachment Settings[/b] and complete setup.  Than make sure you have your permissions set for each usergroup.  You will notice the permissions for PM Attachments have been added to the Personal Message Permissions.
 
 [color=blue][b][size=12pt][u]Admin Settings[/u][/size][/b][/color]
+There are two new areas underneath the [b]Admin[/b] => [b]Forum[/b] => [b]Attachments and Avatars[/b] area, called:
+o [b]PM Attachments[/b] => All options relating to PM attachment functionality
+o [b]PM File Maintenance[/b] => All maintenance options (moved from [b]File Maintenance[/b] tab)
+
+Two new permissions have been added to the [b]Admin[/b] => [b]Members[/b] => [b]Permissions[/b] area:
+o [b]View PM Attachments[/b]
+o [b]Upload PM Attachments[/b]
 
 [color=blue][b][size=12pt][u]Compatibility Notes[/u][/size][/b][/color]
 This mod was tested on SMF 2.0.13, but should work on SMF 2.0 RC2 and up.  SMF 1.x is not and will not be supported.
+
+[color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
+> [url=http://www.simplemachines.org/community/index.php?action=profile;u=198712]SoLoGHoST[/url] - English translation
+> [url=http://www.simplemachines.org/community/index.php?action=profile;u=229017]Bugo[/url] - Russian translation
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=849.msg1483#msg1483]XPtsp.com[/url].

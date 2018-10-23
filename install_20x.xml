@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.0</version>
+<version>2.0 Beta 2</version>
 
 <file name="$boarddir/index.php">
 	<operation>
@@ -665,7 +665,9 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 		//]]></add>
 	</operation>
 	<operation>
-		<search position="after"><![CDATA[// Just in case it was loaded from somewhere else.]]></search>
+		<search position="after"><![CDATA[
+
+	if (WIRELESS && WIRELESS_PROTOCOL == 'wap')]]></search>
 		<add><![CDATA[loadLanguage('PMAttachments');
 	]]></add>
 	</operation>
