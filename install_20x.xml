@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.2</version>
+<version>2.3</version>
 
 <file name="$boarddir/index.php">
 	<operation>
@@ -800,5 +800,122 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 		loadLanguage('PMAttachments', $lang);
 	}]]></add>
 	</operation>
+</file>
+<file name="$themedir/PersonalMessage.template.php">
+	<operation>
+		<search position="after"><![CDATA[			// Show the member's signature?]]></search>
+		<add><![CDATA[	// Assuming there are attachments...
+	if (allowedTo('pm_view_attachments') && !empty($message['attachment'])) {
+
+
+		echo '
+					<div id="post_', $message['id'], '_footer" class="attachments">';
+			
+			echo '
+						<hr width="100%" size="1" class="hrcolor" />
+						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
+
+			foreach ($message['attachment'] as $attachment)
+			{
+				if ($attachment['is_image'])
+				{
+					if ($attachment['thumbnail']['has_thumb'])
+						echo '
+								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+					else
+						echo '
+								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
+				}
+				echo '
+								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
+
+				echo '
+										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+			}
+			echo '
+						</div></div>';
+						
+	}
+
+]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
+		<add><![CDATA[', allowedTo('pm_post_attachments') ? ' enctype="multipart/form-data"' : '', ']]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[// Send, Preview, spellcheck buttons.]]></search>
+		<add><![CDATA[	// If this post already has attachments on it - give information about them.
+	if (!empty($context['current_attachments']))
+	{
+		echo '
+				<dl id="postAttachment">
+					<dt>
+						', $txt['attached'], ':
+					</dt>
+					<dd class="smalltext">
+						<input type="hidden" name="attach_del[]" value="0" />
+						', $txt['uncheck_unwatchd_attach'], ':
+					</dd>';
+			foreach ($context['current_attachments'] as $attachment)
+				echo '
+					<dd class="smalltext">
+						<label for="attachment_', $attachment['id'], '"><input type="checkbox" id= "attachment_', $attachment['id'], '" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="input_check" /> ', $attachment['name'], '</label>
+					</dd>';
+		echo '
+				</dl>';
+	}
+
+	// Is the user allowed to pm any additional ones? If so give them the boxes to do it!
+	if (!empty($context['can_post_attachment']))
+	{
+		echo '								
+							<dl id="postAttachment2">
+								<dt>
+									', $txt['attach'], ':
+								</dt>	
+								<dd class="smalltext">
+									<input type="file" size="38" name="attachment[]" class="input_file" />';
+
+		// Show more boxes only if they aren't approaching their limit.
+		if ($context['num_allowed_attachments'] > 1)
+			echo '
+									<script language="JavaScript" type="text/javascript"><!-- // --><![', 'CDATA', '[
+										var allowed_attachments = ', $context['num_allowed_attachments'], ' - 1;
+
+										function addAttachment()
+										{
+											if (allowed_attachments <= 0)
+												return alert("', $txt['more_attachments_error'], '");
+
+											setOuterHTML(document.getElementById("moreAttachments"), \'<dd class="smalltext"><input type="file" size="38" name="attachment[]" class="input_file" /><\' + \'/dd><dd class="smalltext" id="moreAttachments"><a href="javascript:void(0);" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')<\' + \'/a><\' + \'/dd>\');
+
+											allowed_attachments = allowed_attachments - 1;
+
+											return true;
+										}
+									// ', ']', ']></script>
+									</dd>
+									<dd class="smalltext" id="moreAttachments"><a href="javascript:void(0);" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a></dd>';
+
+			echo '
+						<dd class="smalltext">';
+
+		// Show some useful information such as allowed extensions, maximum size and amount of attachments allowed.
+		if (!empty($modSettings['pmAttachmentCheckExtensions']))
+			echo '
+									', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
+
+		if (!empty($context['attachment_restrictions']))
+			echo '
+									', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '<br />';
+
+		echo '
+						</dd>
+					</dl>';
+	}
+
+]]></add>
+	</operation>	
 </file>
 </modification>

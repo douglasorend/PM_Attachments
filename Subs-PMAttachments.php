@@ -935,7 +935,7 @@ function removePMAttachments($condition, $query_type = '', $return_affected_pms 
 	$request = $smcFunc['db_query']('', '
 		SELECT
 			pa.id_pm, pa.id_folder, pa.downloads, pa.filename, pa.file_hash, pa.attachment_type, pa.id_attach' . ($query_type == 'personalmessages' ? ', pm.id_pm' : '') . ',
-			thumb.id_folder AS thumb_folder, IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb.file_hash as thumb_file_hash, thumb_parent.id_attach AS id_parent
+			thumb.id_folder AS thumb_folder, COALESCE(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb.file_hash as thumb_file_hash, thumb_parent.id_attach AS id_parent
 		FROM {db_prefix}pm_attachments AS pa' .($query_type == 'personalmessages' ? '
 			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pa.id_pm)' : '') . '
 			LEFT JOIN {db_prefix}pm_attachments AS thumb ON (thumb.id_attach = pa.id_thumb)
