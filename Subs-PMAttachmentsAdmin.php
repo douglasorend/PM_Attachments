@@ -654,9 +654,10 @@ function RemoveAllPMAttachments()
 // This function should find pm attachments in the database that no longer exist and clear them, and fix pm filesize issues.
 function RepairPMAttachments()
 {
-	global $modSettings, $context, $txt, $smcFunc;
+	global $modSettings, $context, $txt, $smcFunc, $sourcedir;
 
 	checkSession('get');
+	require_once($sourcedir . '/Subs-PMAttachments.php');
 
 	// If we choose cancel, redirect right back.
 	if (isset($_POST['cancel']))

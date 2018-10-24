@@ -1,3 +1,8 @@
+v2.11 - March 28th, 2018
+o Fixed PM File Maintenance code, per [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3967045#msg3967045]GL700Wing[/url]'s post.
+o Tweaked attachment detail code, per [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3967190#msg3967190]GL700Wing[/url]'s post.
+o Removed downloaded attachment code, , per [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3967190#msg3967190]GL700Wing[/url]'s post.
+
 v2.10 - February 17th, 2018
 o Implemented [url=https://www.simplemachines.org/community/index.php?action=profile;u=112942]GL700Wing[/url]'s fixes, as discussed [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3962269#msg3962269]here[/url].
 

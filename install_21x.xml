@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.10</version>
+<version>2.11</version>
 
 <file name="$sourcedir/ManageAttachments.php">
 	<operation>
@@ -720,16 +720,14 @@
 					{
 						if ($attachment['thumbnail']['has_thumb'])
 							echo '
-								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
+								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'] . (function_exists('highslide_images') ? '" class="highslide" rel="highslide"' : '" onclick="' . $attachment['thumbnail']['javascript']) . '"><img src="', $attachment['thumbnail']['href'], '" alt="' , $attachment['name'] , '" id="thumb_', $attachment['id'], '" border="0" /></a><br />' . ($attachment['is_image'] && function_exists('highslide_images') ? '<div class="highslide-heading">' . $message['subject'] . '</div>' : '');
 						else
 							echo '
 								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
 					}
 					echo '
-								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
-
-					echo '
-										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a>
+								<div style="padding-left:1.0em; margin-top:-0.5em;">(', $attachment['size'] . ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] : '') . ')</div>';
 				}
 				echo '
 						</div></div>';
