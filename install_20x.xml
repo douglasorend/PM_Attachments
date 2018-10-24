@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.8</version>
+<version>2.9</version>
 
 <file name="$sourcedir/Admin.php">
 	<operation>
@@ -614,8 +614,11 @@
 	//
 	
 	$str_downloads = '';
-	$str_attachments = '';	
-	
+	$str_attachments = '';
+
+	if (!is_array($attachments))
+		$attachments = array();
+
 	if (count($attachments) >= 1)
 	{
 		$parent_attachments = array();
@@ -812,15 +815,17 @@
 			echo '
 									<script language="JavaScript" type="text/javascript"><!-- // --><![', 'CDATA', '[
 										var allowed_attachments = ', $context['num_allowed_attachments'], ' - 1;
+										var current_attachment = 1;
 
 										function addAttachment()
 										{
 											if (allowed_attachments <= 0)
 												return alert("', $txt['more_attachments_error'], '");
 
-											setOuterHTML(document.getElementById("moreAttachments"), \'<dd class="smalltext"><input type="file" size="38" name="attachment[]" class="input_file" /><\' + \'/dd><dd class="smalltext" id="moreAttachments"><a href="javascript:void(0);" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')<\' + \'/a><\' + \'/dd>\');
-
 											allowed_attachments = allowed_attachments - 1;
+											current_attachment = current_attachment + 1;
+
+											setOuterHTML(document.getElementById("moreAttachments"), \'<dd class="smalltext"><input type="file" size="38" name="attachment[]" id="attachment\' + current_attachment + \'" class="input_file" /> (<a href="javascript:void(0);" onclick="cleanFileInput(\\\'attachment\' + current_attachment + \'\\\');">', $txt['clean_attach'], '</a>)<\' + \'/dd>\' + (allowed_attachments > 0 ? \'<dd class="smalltext" id="moreAttachments"><a href="javascript:void(0);" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')<\' + \'/a><\' + \'/dd>\' : \'\'));
 
 											return true;
 										}

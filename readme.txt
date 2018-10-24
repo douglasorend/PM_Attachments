@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]PM ATTACHMENTS V2.8[/b][/size][/color]
+[center][color=red][size=16pt][b]PM ATTACHMENTS V2.9[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=198712][b]Originally By SoLoGHost[/b][/url] -> [url=http://custom.simplemachines.org/mods/index.php?mod=1974]Link to Mod[/url]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]Taken Over By Dougiefresh[/b][/url]
 [/center]
@@ -25,6 +25,7 @@ This mod was tested on SMF 2.0.13 and SMF 2.1 Beta 3, but should work on SMF 2.0
 [color=blue][b][size=12pt][u]Translators[/u][/size][/b][/color]
 > [url=http://www.simplemachines.org/community/index.php?action=profile;u=198712]SoLoGHoST[/url] - English translation
 > [url=http://www.simplemachines.org/community/index.php?action=profile;u=229017]Bugo[/url] - Russian translation
+> [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url] - Spanish-Latin translation
 
 [color=blue][b][size=12pt][u]Changelog[/u][/size][/b][/color]
 The changelog has been removed and can be seen at [url=http://www.xptsp.com/board/index.php?topic=849.msg1483#msg1483]XPtsp.com[/url].
