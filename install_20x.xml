@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.5</version>
+<version>2.6</version>
 
 <file name="$sourcedir/Admin.php">
 	<operation>
@@ -731,41 +731,39 @@
 </file>
 <file name="$themedir/PersonalMessage.template.php">
 	<operation>
-		<search position="after"><![CDATA[			// Show the member's signature?]]></search>
-		<add><![CDATA[	// Assuming there are attachments...
-	if (allowedTo('pm_view_attachments') && !empty($message['attachment'])) {
-
-
-		echo '
+		<search position="after"><![CDATA[// Show the member's signature?]]></search>
+		<add><![CDATA[// Assuming there are attachments...
+			if (allowedTo('pm_view_attachments') && !empty($message['attachment'])) 
+			{
+				echo '
 					<div id="post_', $message['id'], '_footer" class="attachments">';
 			
-			echo '
-						<hr width="100%" size="1" class="hrcolor" />
+				echo '
+						<hr width="98%" size="1" class="hrcolor" />
 						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
 
-			foreach ($message['attachment'] as $attachment)
-			{
-				if ($attachment['is_image'])
+				foreach ($message['attachment'] as $attachment)
 				{
-					if ($attachment['thumbnail']['has_thumb'])
-						echo '
+					if ($attachment['is_image'])
+					{
+						if ($attachment['thumbnail']['has_thumb'])
+							echo '
 								<a href="', $attachment['href'], ';image" id="link_', $attachment['id'], '" onclick="', $attachment['thumbnail']['javascript'], '"><img src="', $attachment['thumbnail']['href'], '" alt="" id="thumb_', $attachment['id'], '" border="0" /></a><br />';
-					else
-						echo '
+						else
+							echo '
 								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
-				}
-				echo '
+					}
+					echo '
 								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
 
-				echo '
+					echo '
 										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
-			}
-			echo '
+				}
+				echo '
 						</div></div>';
-						
-	}
+			}
 
-]]></add>
+			]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
@@ -803,7 +801,7 @@
 									', $txt['attach'], ':
 								</dt>	
 								<dd class="smalltext">
-									<input type="file" size="38" name="attachment[]" class="input_file" />';
+									<input type="file" size="60" name="attachment[]" id="attachment1" class="input_file" /> (<a href="javascript:void(0);" onclick="cleanFileInput(\'attachment1\');">', $txt['clean_attach'], '</a>)';
 
 		// Show more boxes only if they aren't approaching their limit.
 		if ($context['num_allowed_attachments'] > 1)

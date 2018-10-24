@@ -38,8 +38,9 @@ function PMA_Admin(&$admin_areas)
 
 function PMA_Admin_Search(&$language_files, &$include_files, &$settings_search)
 {
-	$language_files[] = 'PMAttachments';
-	$include_files[] = 'Subs-PMAttachmentsAdmin';
+	global $sourcedir;
+	loadLanguage('PMAttachments');
+	require_once($sourcedir . '/Subs-PMAttachmentsAdmin.php');
 	$settings_search[] = array('ManagePMAttachmentSettings', 'area=manageattachments;sa=pmattachments');
 }
 

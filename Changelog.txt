@@ -1,3 +1,7 @@
+v2.6 - December 6th, 2017
+o [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3950084#msg3950084]Per GL700Wing:[/url] Horizontal scroll bar beneath PM attachments has been fixed.
+o [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3950098#msg3950098]Per GL700Wing:[/url] Added missing functionality to clear/remove attachments.
+
 v2.5.1 - September 6th, 2017
 o SMF 2.0: Fixed admin search functionality.
 
