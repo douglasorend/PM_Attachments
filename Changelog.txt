@@ -1,3 +1,6 @@
+v2.10 - February 17th, 2018
+o Implemented [url=https://www.simplemachines.org/community/index.php?action=profile;u=112942]GL700Wing[/url]'s fixes, as discussed [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3962269#msg3962269]here[/url].
+
 v2.9 - January 19th, 2018
 o Fixed "Wrong value type send to database" issue, discussed [url=https://www.simplemachines.org/community/index.php?topic=556502.0]here[/url].
 o Fixed missing "Clear Attachment" link for new PM attachments.

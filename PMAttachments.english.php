@@ -152,4 +152,6 @@ Once the PM attachments folder reaches it\'s maximum permitted size users will n
 {REGARDS}',
 		);
 
+$txt['pm_error_user_cannot_view_atts'] = 'User \'%1$s\' is not allowed to view personal message attachments.';
+
 ?>

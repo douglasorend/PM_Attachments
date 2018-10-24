@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.9</version>
+<version>2.10</version>
 
 <file name="$sourcedir/Admin.php">
 	<operation>
@@ -378,7 +378,7 @@
 	<operation>
 		<search position="after"><![CDATA[// Do the actual sending of the PM.]]></search>
 		<add><![CDATA[// Check if they are trying to attach a new file...
-	if (isset($_FILES['attachment']['name']) || !empty($_SESSION['temp_pm_attachments']))
+	if (!empty($_FILES['attachment']['name'][0]) || !empty($_SESSION['temp_pm_attachments']))
 	{	
 		// Check to make sure everybody can view PM attachments:
 		if (!canViewPMAttachments($recipientList))
@@ -747,7 +747,7 @@
 			
 				echo '
 						<hr width="98%" size="1" class="hrcolor" />
-						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 100%;">';
+						<div style="overflow: ', $context['browser']['is_firefox'] ? 'visible' : 'auto', '; width: 98%;">';
 
 				foreach ($message['attachment'] as $attachment)
 				{

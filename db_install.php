@@ -83,7 +83,7 @@ $smcFunc['db_create_table']('{db_prefix}pm_attachments', $columns, '', 'update',
 
 // No need to change anything here - it already works!  (GL700Wing)
 // Insert the settings
-$smcFunc['db_insert']('replace',
+$smcFunc['db_insert']('ignore',
             '{db_prefix}settings',
             array(
 				'variable' => 'string', 'value' => 'string',

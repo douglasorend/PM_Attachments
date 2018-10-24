@@ -40,12 +40,12 @@ if (!defined('SMF'))
 
 */
 
-function canViewPMAttachments($id_members = array())
+function canViewPMAttachments($recipients)
 {
-	global $smcFunc, $modSettings;
+	global $smcFunc, $modSettings, $txt, $context;
 
 	// No members or attachments?  Then just return to the caller:
-	if (empty($id_members))
+	if (empty($recipients))
 		return;
 
 	// Load the groups that are allowed to view PM attachments.
@@ -70,6 +70,11 @@ function canViewPMAttachments($id_members = array())
 	if (empty($modSettings['permission_enable_deny']))
 		$disallowed_groups = array();
 
+	// Make sure there are no duplicate recipients.
+	$recipients['to'] = array_unique($recipients['to']);
+	$recipients['bcc'] = array_diff(array_unique($recipients['bcc']), $recipients['to']);
+	$all_to = array_merge($recipients['to'], $recipients['bcc']);
+
 	// Is a member part of a membergroup that can/cannot view PM attachments?
 	$request = $smcFunc['db_query']('', '
 		SELECT
@@ -78,8 +83,8 @@ function canViewPMAttachments($id_members = array())
 		WHERE id_member IN ({array_int:recipients})
 		LIMIT {int:count_recipients}',
 		array(
-			'recipients' => $id_members,
-			'count_recipients' => count($id_members),
+			'recipients' => $all_to,
+			'count_recipients' => count($all_to),
 		)
 	);
 	while ($row = $smcFunc['db_fetch_assoc']($request))
@@ -88,10 +93,10 @@ function canViewPMAttachments($id_members = array())
 		$groups[] = $row['id_group'];
 		$groups[] = $row['id_post_group'];
 		if (!in_array(1, $groups) && (count(array_intersect($allowed_groups, $groups)) == 0 || count(array_intersect($disallowed_groups, $groups)) != 0))
-			$context['send_log']['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
+			$context['send_log']['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_view_atts'], $row['real_name']);
 	}
 	$smcFunc['db_free_result']($request);
-	
+
 	// Return true if all members are allowed to view PM attachments.
 	return empty($context['send_log']['failed']);
 }
@@ -100,6 +105,10 @@ function Add_PM_JavaScript()
 {
 	global $context;
 	
+	// Make sure we have the language strings we need:
+	loadLanguage('PMAttachments');
+
+	// Add the necessary javascript:
 	$context['html_headers'] .= '
 	<script type="text/javascript"><!-- // --><![CDATA[
 		function expandThumb(thumbID)
