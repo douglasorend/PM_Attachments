@@ -2,68 +2,24 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>sologhost:pmattachments</id>
-<version>2.4</version>
+<version>2.5</version>
 
-<file name="$boarddir/index.php">
-	<operation>
-		<search position="before"><![CDATA[		'dlattach' => array('Display.php', 'Download'),]]></search>
-		<add><![CDATA[
-		'dlpmattach' => array('Subs-PMAttachments.php', 'PMDownload'),]]></add>
-	</operation>
-</file>
 <file name="$sourcedir/Admin.php">
 	<operation>
-		<search position="before"><![CDATA[loadTemplate('Admin', 'admin');]]></search>
+		<search position="after"><![CDATA[
+
+	foreach ($settings_search as $setting_area)]]></search>
 		<add><![CDATA[
-	loadLanguage('PMAttachments');]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA['attachments' => array($txt['attachment_manager_settings']),]]></search>
-		<add><![CDATA[
-						'pmattachments' => array($txt['pmattachment_manager_settings']),]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA['maintenance' => array($txt['attachment_manager_maintenance']),]]></search>
-		<add><![CDATA[
-						'pmMaintenance' => array($txt['pmattachment_manager_maintenance']),]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA[		// Mod authors if you want to be "real freaking good" then add any setting pages for your mod BELOW this line!]]></search>
-		<add><![CDATA[
-		array('ManagePMAttachmentSettings', 'area=manageattachments;sa=pmattachments'),]]></add>
-	</operation>
-</file>
-<file name="$sourcedir/Help.php">
-	<operation>
-		<search position="before"><![CDATA[loadLanguage('Help');]]></search>
-		<add><![CDATA[
-	loadLanguage('PMAttachments');]]></add>
+	PMA_Admin_Search($language_files, $include_files, $settings_search);]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/ManageAttachments.php">
 	<operation>
-		<search position="before"><![CDATA[global $txt, $modSettings, $scripturl, $context, $options]]></search>
-		<add><![CDATA[, $sourcedir]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA[loadTemplate('ManageAttachments');]]></search>
+		<search position="after"><![CDATA[
+
+	// Pick the correct sub-action.]]></search>
 		<add><![CDATA[
-	loadTemplate('PMAttachmentsAdmin');
-	require_once($sourcedir . '/Subs-PMAttachmentsAdmin.php');]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA['moveAvatars' => 'MoveAvatars',]]></search>
-		<add><![CDATA[
-		'pmattachments' => 'ManagePMAttachmentSettings',
-		'pmattachpaths' => 'ManagePMAttachmentPaths',
-		'pmByAge' => 'RemovePMAttachmentByAge',
-		'pmBySize' => 'RemovePMAttachmentBySize',
-		'pmByDowns' => 'RemovePMAttachByDownloads',
-		'pmMaintenance' => 'MaintainPMFiles',
-		'pmRemoveReported' => 'RemoveReportedPMAttachments',
-		'pmRemoveByMembers' => 'RemovePMAttachByMembers',
-		'pmremoveall' => 'RemoveAllPMAttachments',
-		'pmrepair' => 'RepairPMAttachments',]]></add>
+	PMA_Manage($subActions);]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[function pauseAttachmentMaintenance($to_fix, $max_substep = 0)]]></search>
@@ -76,24 +32,18 @@
 </file>
 <file name="$sourcedir/ManagePermissions.php">
 	<operation>
-		<search position="before"><![CDATA[// Standard - ie. members.  They can do anything Restrictive can.
-	$groupLevels['global']['standard'] = array_merge($groupLevels['global']['restrict'], array(]]></search>
+		<search position="before"><![CDATA['modify_any',
+		'approve_posts',
+	));]]></search>
 		<add><![CDATA[
-		'pm_view_attachments',
-		'pm_post_attachments',]]></add>
+	PMA_Load_Levels($groupLevels, $boardLevels);]]></add>
 	</operation>
 	<operation>
-		<search position="before"><![CDATA[	$permissionList = array(
-		'membergroup' => array(]]></search>
+		<search position="before"><![CDATA['send_mail',
+		'approve_posts',
+	);]]></search>
 		<add><![CDATA[
-			'pm_view_attachments' => array(false, 'pm', 'use_pm_system'),
-			'pm_post_attachments' => array(false, 'pm', 'use_pm_system'),]]></add>
-	</operation>
-	<operation>
-		<search position="before"><![CDATA[	$context['non_guest_permissions'] = array(]]></search>
-		<add><![CDATA[
-		'pm_view_attachments',
-		'pm_post_attachments',]]></add>
+	PMA_Non_Guest();]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/PersonalMessage.php">
