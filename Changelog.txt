@@ -1,3 +1,6 @@
+v2.2 - March 15th, 2017
+o Fixed [b]PersonalMessage.template.php[/b] so that Send screen attaches files properly (again).
+
 v2.1 - March 7th, 2017
 o Replaced code that used [b]preg_match[/b] with [b]preg_match_callback[/b].  Thanks, [url=http://www.simplemachines.org/community/index.php?action=profile;u=112942]GL700Wing[/url]!
 

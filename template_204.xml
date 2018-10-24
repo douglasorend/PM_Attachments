@@ -43,7 +43,7 @@
 ]]></add>
 	</operation>
 	<operation>
-		<search position="before"><![CDATA[id="postmodify"]]></search>
+		<search position="before"><![CDATA[<form action="', $scripturl, '?action=pm;sa=send2"]]></search>
 		<add><![CDATA[', allowedTo('pm_post_attachments') ? ' enctype="multipart/form-data"' : '', ']]></add>
 	</operation>
 	<operation>
