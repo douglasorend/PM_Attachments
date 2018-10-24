@@ -1,3 +1,6 @@
+v2.5.1 - September 6th, 2017
+o SMF 2.0: Fixed admin search functionality.
+
 v2.5 - September 4th, 2017
 o Moved all possible hook code to [b]Subs-PMAttachmentsHooks.php[/b].
 o Fixed issue where admin search was broken due to file not being loaded.
