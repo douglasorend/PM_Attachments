@@ -4,7 +4,7 @@
 	<id>sologhost:pmattachments</id>
 	<name>PM Attachments</name>
 	<type>modification</type>
-	<version>2.3</version>
+	<version>2.4</version>
 
 	<!--// SMF 2.0.4 and later //-->
 	<install for="2.0.4 - 2.0.99">
@@ -19,11 +19,36 @@
 		<require-file name="PMAttachments.english-utf8.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian-utf8.php" destination="$languagedir" />
-		<redirect url="?action=admin;area=maintain;sa=routine;activity=cleancache" timeout="15000">install_readme.txt</redirect> 
 	</install>
 	<uninstall for="2.0.4 - 2.0.99">
 		<readme type="file" parsebbc="true">readme_remove.txt</readme>
 		<modification type="file" reverse="true">install_20x.xml</modification>
+		<remove-file name="$sourcedir/Subs-PMAttachments.php" />
+		<remove-file name="$sourcedir/Subs-PMAttachmentsAdmin.php" />
+		<remove-file name="$boarddir/Themes/default/PMAttachmentsAdmin.template.php" />
+		<remove-file name="$languagedir/PMAttachments.english.php" />
+		<remove-file name="$languagedir/PMAttachments.english-utf8.php" />
+		<remove-file name="$languagedir/PMAttachments.russian.php" />
+		<remove-file name="$languagedir/PMAttachments.russian-utf8.php" />
+	</uninstall>
+
+	<!--// SMF 2.1 Beta 3 //-->
+	<install for="2.1 Beta 3">
+		<readme type="file" parsebbc="true">readme.txt</readme>
+		<database>db_install.php</database>
+		<modification type="file">install_21x.xml</modification>
+		<require-dir name="pm_attachments" destination="$boarddir" />
+		<require-file name="Subs-PMAttachments.php" destination="$sourcedir" />
+		<require-file name="Subs-PMAttachmentsAdmin.php" destination="$sourcedir" />
+		<require-file name="PMAttachmentsAdmin.template.php" destination="$boarddir/Themes/default" />
+		<require-file name="PMAttachments.english.php" destination="$languagedir" />
+		<require-file name="PMAttachments.english-utf8.php" destination="$languagedir" />
+		<require-file name="PMAttachments.russian.php" destination="$languagedir" />
+		<require-file name="PMAttachments.russian-utf8.php" destination="$languagedir" />
+	</install>
+	<uninstall for="2.1 Beta 3">
+		<readme type="file" parsebbc="true">readme_remove.txt</readme>
+		<modification type="file" reverse="true">install_21x.xml</modification>
 		<remove-file name="$sourcedir/Subs-PMAttachments.php" />
 		<remove-file name="$sourcedir/Subs-PMAttachmentsAdmin.php" />
 		<remove-file name="$boarddir/Themes/default/PMAttachmentsAdmin.template.php" />

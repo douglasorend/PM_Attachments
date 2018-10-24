@@ -6,14 +6,14 @@
 
 <file name="$boarddir/index.php">
 	<operation>
-		<search position="before"><![CDATA[		'dlattach' => array('Display.php', 'Download'),]]></search>
+		<search position="before"><![CDATA[		'dlattach' => array('ShowAttachments.php', 'showAttachment'),]]></search>
 		<add><![CDATA[
 		'dlpmattach' => array('Subs-PMAttachments.php', 'PMDownload'),]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/Admin.php">
 	<operation>
-		<search position="before"><![CDATA[loadTemplate('Admin', 'admin');]]></search>
+		<search position="before"><![CDATA[loadLanguage('Admin');]]></search>
 		<add><![CDATA[
 	loadLanguage('PMAttachments');]]></add>
 	</operation>
@@ -42,7 +42,7 @@
 </file>
 <file name="$sourcedir/ManageAttachments.php">
 	<operation>
-		<search position="before"><![CDATA[global $txt, $modSettings, $scripturl, $context, $options]]></search>
+		<search position="before"><![CDATA[global $txt, $context]]></search>
 		<add><![CDATA[, $sourcedir]]></add>
 	</operation>
 	<operation>
@@ -52,7 +52,7 @@
 	require_once($sourcedir . '/Subs-PMAttachmentsAdmin.php');]]></add>
 	</operation>
 	<operation>
-		<search position="before"><![CDATA['moveAvatars' => 'MoveAvatars',]]></search>
+		<search position="before"><![CDATA['removeall' => 'RemoveAllAttachments',]]></search>
 		<add><![CDATA[
 		'pmattachments' => 'ManagePMAttachmentSettings',
 		'pmattachpaths' => 'ManagePMAttachmentPaths',
@@ -76,7 +76,7 @@
 </file>
 <file name="$sourcedir/ManagePermissions.php">
 	<operation>
-		<search position="before"><![CDATA[// Standard - ie. members.  They can do anything Restrictive can.
+		<search position="before"><![CDATA[	// Standard - ie. members.  They can do anything Restrictive can.
 	$groupLevels['global']['standard'] = array_merge($groupLevels['global']['restrict'], array(]]></search>
 		<add><![CDATA[
 		'pm_view_attachments',
@@ -190,13 +190,10 @@
 	//]]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[	// Send the array.
-	$output = array(
-		'alternate' => $counter % 2,]]></search>
-		<add><![CDATA[	// Send the array.
-	$output = array(
-		'attachment' => loadPMAttachmentContext($message['id_pm']),
-		'alternate' => $counter % 2,]]></add>
+		<search position="before"><![CDATA[// Send the array.
+	$output = array(]]></search>
+		<add><![CDATA[
+		'attachment' => loadPMAttachmentContext($message['id_pm']),]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[// Set the title...
@@ -226,7 +223,7 @@
 	</operation>
 	<operation>
 		<search position="after"><![CDATA[	// Set the defaults...
-	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];]]></search>
+	$context['subject'] = $form_subject;]]></search>
 		<add><![CDATA[	// Handle the Attachment info...
 	$context['num_allowed_attachments'] = empty($modSettings['attachmentNumPerPMLimit']) ? 50 : $modSettings['attachmentNumPerPMLimit'];
 	$context['can_post_attachment'] = !empty($modSettings['pmAttachmentEnable']) && $modSettings['pmAttachmentEnable'] == 1 && allowedTo('pm_post_attachments') && $context['num_allowed_attachments'] > 0 ? 1 : 0;
@@ -641,11 +638,9 @@
 		//]]></add>
 	</operation>
 	<operation>
-		<search position="after"><![CDATA[
-
-	if (WIRELESS && WIRELESS_PROTOCOL == 'wap')]]></search>
-		<add><![CDATA[loadLanguage('PMAttachments');
-	]]></add>
+		<search position="before"><![CDATA[loadLanguage('PersonalMessage+Drafts');]]></search>
+		<add><![CDATA[
+	loadLanguage('PMAttachments');]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/Subs-Post.php">
@@ -744,7 +739,7 @@
 		<add><![CDATA[, 'attachments' => 'string-255', 'downloads' => 'string-255']]></add>
 	</operation>
 	<operation>
-		<search position="replace"><![CDATA[$mailmessage .= "\n\n" . $txt['instant_reply'] . ' ' . $scripturl . '?action=pm;sa=send;f=inbox;pmsg=' . $id_pm . ';quote;u=' . $from['id'];
+		<search position="before"><![CDATA[$emaildata = loadEmailTemplate($email_template, $replacements, $lang);
 
 		// Off the notification email goes!]]></search>
 		<add><![CDATA[
@@ -752,22 +747,22 @@
 		// PM ATTACHMENTS MOD Begin...
 		//
 		
-		$mailmessage .= "\n";
+		$email_template .= "\n";
 		if (!empty($parent_attachments))
 		{
-			$mailmessage .= "\n" . $txt['pmattachments_mail'] . "\n";
+			$email_template .= "\n" . $txt['pmattachments_mail'] . "\n";
 			
 			foreach ($parent_attachments as $attachID)
-				$mailmessage .= $scripturl . '?action=dlpmattach;pm=' . $id_pm . ';attach=' . $attachID . "\n";		
+				$email_template .= $scripturl . '?action=dlpmattach;pm=' . $id_pm . ';attach=' . $attachID . "\n";		
 		}
 
-		$mailmessage .= "\n" . $txt['instant_reply'] . ' ' . $scripturl . '?action=pm;sa=send;f=inbox;pmsg=' . $id_pm . ';quote;u=' . $from['id'];
+		$email_template .= "\n" . $txt['instant_reply'] . ' ' . $scripturl . '?action=pm;sa=send;f=inbox;pmsg=' . $id_pm . ';quote;u=' . $from['id'];
 		
 		//
 		// PM ATTACHMENTS MOD END!
 		//
 
-		// Off the notification email goes!]]></add>
+		]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if ($loadLang)
@@ -781,7 +776,9 @@
 </file>
 <file name="$themedir/PersonalMessage.template.php">
 	<operation>
-		<search position="after"><![CDATA[			// Show the member's signature?]]></search>
+		<search position="after"><![CDATA[if ($message['can_report'] || $context['can_send_pm'])
+			echo '
+				<div class="under_message">';]]></search>
 		<add><![CDATA[	// Assuming there are attachments...
 	if (allowedTo('pm_view_attachments') && !empty($message['attachment'])) {
 
@@ -805,10 +802,10 @@
 								<img src="' . $attachment['href'] . ';image" alt="" width="' . $attachment['width'] . '" height="' . $attachment['height'] . '" border="0" /><br />';
 				}
 				echo '
-								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.gif" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
+								<a href="' . $attachment['href'] . '"><img src="' . $settings['images_url'] . '/icons/clip.png" align="middle" alt="*" border="0" />&nbsp;' . $attachment['name'] . '</a> ';
 
 				echo '
-										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
+										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . sprintf($txt['attach_viewed'], $attachment['downloads']) : ' - ' . sprintf($txt['attach_downloaded'], $attachment['downloads'])), '.)<br />';
 			}
 			echo '
 						</div></div>';
@@ -877,7 +874,7 @@
 									<dd class="smalltext" id="moreAttachments"><a href="javascript:void(0);" onclick="addAttachment(); return false;">(', $txt['more_attachments'], ')</a></dd>';
 
 			echo '
-								<dd class="smalltext">';
+						<dd class="smalltext">';
 
 		// Show some useful information such as allowed extensions, maximum size and amount of attachments allowed.
 		if (!empty($modSettings['pmAttachmentCheckExtensions']))
@@ -889,8 +886,8 @@
 									', $txt['attach_restrictions'], ' ', implode(', ', $context['attachment_restrictions']), '<br />';
 
 		echo '
-								</dd>
-							</dl>  ';
+						</dd>
+					</dl>';
 	}
 
 ]]></add>
