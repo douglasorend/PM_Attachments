@@ -14,6 +14,9 @@ if (!defined('SMF'))
 
 /*	This file deals with PM attachments.  The following functions are used:
 
+	boolean viewPMAttachments(array id_members, array(by_ref) cannot_receive)
+		// checks to see if all members can receive PM attachments.  cannot_receive contains members that cannot.
+
 	string getPMAttachmentFilename(string filename, int attachment_id, string dir = null, bool new = false, string file_hash = '')
 		// returns PM attachment's encrypted filename.  If $new is true, won't check for file existence.
 
@@ -36,6 +39,62 @@ if (!defined('SMF'))
 		// !!!!
 
 */
+
+function canViewPMAttachments($id_members = array())
+{
+	global $smcFunc, $modSettings;
+
+	// No members or attachments?  Then just return to the caller:
+	if (empty($id_members))
+		return;
+
+	// Load the groups that are allowed to view PM attachments.
+	$allowed_groups = $disallowed_groups = array();
+	$request = $smcFunc['db_query']('', '
+		SELECT id_group, add_deny
+		FROM {db_prefix}permissions
+		WHERE permission = {string:read_permission}',
+		array(
+			'read_permission' => 'pm_view_attachments',
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		if (empty($row['add_deny']))
+			$disallowed_groups[] = $row['id_group'];
+		else
+			$allowed_groups[] = $row['id_group'];
+	}
+	$smcFunc['db_free_result']($request);
+
+	if (empty($modSettings['permission_enable_deny']))
+		$disallowed_groups = array();
+
+	// Is a member part of a membergroup that can/cannot view PM attachments?
+	$request = $smcFunc['db_query']('', '
+		SELECT
+			real_name, id_member, additional_groups, id_group, id_post_group
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:recipients})
+		LIMIT {int:count_recipients}',
+		array(
+			'recipients' => $id_members,
+			'count_recipients' => count($id_members),
+		)
+	);
+	while ($row = $smcFunc['db_fetch_assoc']($request))
+	{
+		$groups = explode(',', $row['additional_groups']);
+		$groups[] = $row['id_group'];
+		$groups[] = $row['id_post_group'];
+		if (!in_array(1, $groups) && (count(array_intersect($allowed_groups, $groups)) == 0 || count(array_intersect($disallowed_groups, $groups)) != 0))
+			$context['send_log']['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
+	}
+	$smcFunc['db_free_result']($request);
+	
+	// Return true if all members are allowed to view PM attachments.
+	return empty($context['send_log']['failed']);
+}
 
 function Add_PM_JavaScript()
 {

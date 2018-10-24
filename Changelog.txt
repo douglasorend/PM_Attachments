@@ -1,3 +1,9 @@
+v2.8 - January 10th, 2017
+o Added checks to make sure everybody involved can see the attached files in the PM.
+
+v2.7 - December 8th, 2017
+o Added Spanish Latin translation, courtsey of [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url]!
+
 v2.6 - December 6th, 2017
 o [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3950084#msg3950084]Per GL700Wing:[/url] Horizontal scroll bar beneath PM attachments has been fixed.
 o [url=https://www.simplemachines.org/community/index.php?topic=331969.msg3950098#msg3950098]Per GL700Wing:[/url] Added missing functionality to clear/remove attachments.

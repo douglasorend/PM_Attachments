@@ -4,7 +4,7 @@
 	<id>sologhost:pmattachments</id>
 	<name>PM Attachments</name>
 	<type>modification</type>
-	<version>2.6</version>
+	<version>2.8</version>
 
 	<!--// SMF 2.0.4 and later //-->
 	<install for="2.0.4 - 2.0.99">
@@ -21,6 +21,8 @@
 		<require-file name="PMAttachments.english-utf8.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian-utf8.php" destination="$languagedir" />
+		<require-file name="PMAttachments.spanish_latin.php" destination="$languagedir" />
+		<require-file name="PMAttachments.spanish_latin-utf8.php" destination="$languagedir" />
 	</install>
 	<uninstall for="2.0.4 - 2.0.99">
 		<readme type="file" parsebbc="true">readme_remove.txt</readme>
@@ -34,6 +36,8 @@
 		<remove-file name="$languagedir/PMAttachments.english-utf8.php" />
 		<remove-file name="$languagedir/PMAttachments.russian.php" />
 		<remove-file name="$languagedir/PMAttachments.russian-utf8.php" />
+		<remove-file name="$languagedir/PMAttachments.spanish_latin.php" />
+		<remove-file name="$languagedir/PMAttachments.spanish_latin-utf8.php" />
 	</uninstall>
 
 	<!--// SMF 2.1 Beta 3 //-->
@@ -51,6 +55,8 @@
 		<require-file name="PMAttachments.english-utf8.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian.php" destination="$languagedir" />
 		<require-file name="PMAttachments.russian-utf8.php" destination="$languagedir" />
+		<require-file name="PMAttachments.spanish_latin.php" destination="$languagedir" />
+		<require-file name="PMAttachments.spanish_latin-utf8.php" destination="$languagedir" />
 	</install>
 	<uninstall for="2.1 Beta 3">
 		<readme type="file" parsebbc="true">readme_remove.txt</readme>
@@ -64,5 +70,7 @@
 		<remove-file name="$languagedir/PMAttachments.english-utf8.php" />
 		<remove-file name="$languagedir/PMAttachments.russian.php" />
 		<remove-file name="$languagedir/PMAttachments.russian-utf8.php" />
+		<remove-file name="$languagedir/PMAttachments.spanish_latin.php" />
+		<remove-file name="$languagedir/PMAttachments.spanish_latin-utf8.php" />
 	</uninstall>
 </package-info>
